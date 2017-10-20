@@ -1,0 +1,18 @@
+ALTER TABLE card ALTER COLUMN number TYPE VARCHAR(19);
+
+### check table draft (not implemented yet) ####
+CREATE TABLE public."check" (
+	Check SERIAL PRIMARY KEY,
+	Card INT FOREIGN KEY REFERENCES public.card.card,
+	DateTime TIMESTAMP WITH TIME ZONE NOT NULL,
+	Paid BOOLEAN,
+	PaymentForm INT CHECK (PaymentForm IN('1','2')),
+	CreateDatetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT clock_timestamp();
+	ModifyDatetime TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT clock_timestamp();
+)
+ALTER TABLE public."check"
+    OWNER to postgres;
+
+### importing csv into table ###
+\copy public.card (number, firstname, middlename, lastname, birthdate, createdatetime, modifydatetime) FROM 'C:/Users/owl_a/PYCHAR~1/DB_SUP~1/src/card.csv' DELIMITER ',';
+\copy public.check (card, datetime, paid, paymentform, createdatetime, modifydatetime) FROM 'C:/Users/owl_a/PYCHAR~1/DB_SUP~1/src/checks.csv' DELIMITER ',';
