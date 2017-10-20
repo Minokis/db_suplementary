@@ -17,32 +17,31 @@ g.add_provider(RussiaSpecProvider)
 
 random.seed()
 
-
-def Card(counter=[0]):
-    counter[0] += 1
-    return counter[0]
-
 timestamp_fmt = '%Y-%m-%d %H:%M:%S.%f'
-
-def card_create_row(genderstr):
-    timestamp = dt.now().strftime('%Y-%m-%d %H:%M:%S.%f')
-    row = [g.personal.credit_card_number(),
-           g.personal.name(gender=genderstr),
-           g.russia_provider.patronymic(gender=genderstr),
-           g.personal.surname(gender=genderstr),
-           g.datetime.date(start=1950, end=2001, fmt='%Y-%m-%d'),
-           timestamp, timestamp]
-    return row
-
+card_numbers = set()
+# Ensures that card numbers are unique in the file
 def create_card_csv(n, filename):
+    timestamp = dt.now().strftime('%Y-%m-%d %H:%M:%S.%f')
     genders = ['male', 'female']
     with open(filename, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        for j in range(n):
-            writer.writerow(card_create_row(genders[random.randint(0, 1)]))
+        i = 0
+        for j in range(10000):
+            card_number = '4'+ g.code.custom_code(mask='###')+' '+g.code.custom_code(mask='####')+' '+g.code.custom_code(mask='####')+' '+g.code.custom_code(mask='####')
+            if card_number in card_numbers:
+                continue
+            else:
+                card_numbers.add(card_number)
+                genderstr=genders[random.randint(0, 1)]
+                row = [card_number,
+                       g.personal.name(gender=genderstr),
+                       g.russia_provider.patronymic(gender=genderstr),
+                       g.personal.surname(gender=genderstr),
+                       g.datetime.date(start=1950, end=2001, fmt='%Y-%m-%d'),
+                       timestamp, timestamp]
+                writer.writerow(row)
+                i += 1
+                if i == n:
+                    break
 
 create_card_csv(100, 'card.csv')
-
-
-# COPY card(Number, FirstName, MiddleName, LastName, BirthDate, CreateDatetime)
-# FROM 'C:\Users\owl_a\PycharmProjects\db_suplementary\src\card.csv' DELIMITER ',';
