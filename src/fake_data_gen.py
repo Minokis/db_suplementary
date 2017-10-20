@@ -24,15 +24,15 @@ print('Цена:', g.business.price())
 # card number:
 print('Номер кредитки:', g.personal.credit_card_number())
 # FirstName
-print('Имя:', g.personal.name())
+print('Имя:', g.personal.name(gender='female'))
 # MiddleName - а зачем?
 g.add_provider(RussiaSpecProvider)
-print('Отчество:', g.russia_provider.patronymic())
+print('Отчество:', g.russia_provider.patronymic(gender='female'))
 # LastName
-print('Фамилия:', g.personal.surname())
+print('Фамилия:', g.personal.surname(gender='female'))
 # Full name (as on card):
 print('Имя и фамилия, как на карте:', g.personal.full_name())
 
 # BirthDate:
-print(g.datetime.date(start=1950, end=2001, fmt=None))
+print(g.datetime.date(start=1950, end=2001, fmt='%Y-%m-%d'))
 # есть еще day_of_month(), month() % year(), time()
